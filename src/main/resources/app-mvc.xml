@@ -10,7 +10,7 @@
 			http://www.springframework.org/schema/context/spring-context-4.0.xsd ">
 
 	<!-- 自动扫描 -->
-	<context:component-scan base-package="com.allinpay.zj.tlacp.web.controller" />
+	<context:component-scan base-package="org.ihansen.jsmta.web.controller" />
 
 	<!-- 注解驱动 -->
 	<mvc:annotation-driven />
@@ -19,7 +19,7 @@
 	<mvc:resources location="/static/" mapping="/static/**" />
 	<mvc:resources location="/upload/" mapping="/upload/**"/>
 	
-	<!-- 内部资源视图解析器 prefix + logicName + suffix /WEB-INF/jsps/ + index + .jsp -->
+	<!-- 内部资源视图解析器 prefix + logicName + suffix /WEB-INF/pages/ + index + .jsp -->
 	<bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<!-- 包含JSTL解析 -->
 		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
@@ -37,11 +37,11 @@
 			<mvc:mapping path="/**" />
 			<mvc:exclude-mapping path="/upload/**"/>
 			<mvc:exclude-mapping path="/common/codeVerify"/>
-			<bean class="com.allinpay.zj.tlacp.web.interceptor.LoginInterceptor" />
+			<bean class="org.ihansen.jsmta.web.interceptor.LoginInterceptor" />
 		</mvc:interceptor>
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
-			<bean class="com.allinpay.zj.tlacp.web.interceptor.ResponseInterceptor"/>
+			<bean class="org.ihansen.jsmta.web.interceptor.ResponseInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors>
 </beans>

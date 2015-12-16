@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.ihansen.jsmta.domain.operate.UserAuthMapper" >
+  <resultMap id="BaseResultMap" type="org.ihansen.jsmta.domain.UserAuth" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="AUTH_NAME" property="authName" jdbcType="VARCHAR" />
+    <result column="AUTH_ID" property="authId" jdbcType="VARCHAR" />
+    <result column="AUTH_ACCESS_TOKEN" property="authAccessToken" jdbcType="VARCHAR" />
+    <result column="AUTH_EXPIRES" property="authExpires" jdbcType="DECIMAL" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="DONE_DATE" property="doneDate" jdbcType="TIMESTAMP" />
+    <result column="STATE" property="state" jdbcType="CHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, USER_ID, AUTH_NAME, AUTH_ID, AUTH_ACCESS_TOKEN, AUTH_EXPIRES, CREATE_DATE, DONE_DATE, 
+    STATE, REMARK
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.ihansen.jsmta.domain.UserAuthEX" >
+    <include refid="OracleDialectPrefix" />
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from USER_AUTH
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <include refid="OracleDialectSuffix" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from USER_AUTH
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from USER_AUTH
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.ihansen.jsmta.domain.UserAuthEX" >
+    delete from USER_AUTH
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.ihansen.jsmta.domain.UserAuth" >
+    insert into USER_AUTH (ID, USER_ID, AUTH_NAME, 
+      AUTH_ID, AUTH_ACCESS_TOKEN, AUTH_EXPIRES, 
+      CREATE_DATE, DONE_DATE, STATE, 
+      REMARK)
+    values (#{id,jdbcType=DECIMAL}, #{userId,jdbcType=VARCHAR}, #{authName,jdbcType=VARCHAR}, 
+      #{authId,jdbcType=VARCHAR}, #{authAccessToken,jdbcType=VARCHAR}, #{authExpires,jdbcType=DECIMAL}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{doneDate,jdbcType=TIMESTAMP}, #{state,jdbcType=CHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.ihansen.jsmta.domain.UserAuth" >
+    <selectKey keyProperty="id" resultType="java.lang.Long" order="BEFORE" >
+      select 
+      <include refid="TABLE_SEQUENCE" />
+       from dual
+    </selectKey>
+    insert into USER_AUTH
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="authName != null" >
+        AUTH_NAME,
+      </if>
+      <if test="authId != null" >
+        AUTH_ID,
+      </if>
+      <if test="authAccessToken != null" >
+        AUTH_ACCESS_TOKEN,
+      </if>
+      <if test="authExpires != null" >
+        AUTH_EXPIRES,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="doneDate != null" >
+        DONE_DATE,
+      </if>
+      <if test="state != null" >
+        STATE,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="authName != null" >
+        #{authName,jdbcType=VARCHAR},
+      </if>
+      <if test="authId != null" >
+        #{authId,jdbcType=VARCHAR},
+      </if>
+      <if test="authAccessToken != null" >
+        #{authAccessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="authExpires != null" >
+        #{authExpires,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="doneDate != null" >
+        #{doneDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=CHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.ihansen.jsmta.domain.UserAuthEX" resultType="java.lang.Integer" >
+    select count(*) from USER_AUTH
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update USER_AUTH
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.userId != null" >
+        USER_ID = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.authName != null" >
+        AUTH_NAME = #{record.authName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.authId != null" >
+        AUTH_ID = #{record.authId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.authAccessToken != null" >
+        AUTH_ACCESS_TOKEN = #{record.authAccessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="record.authExpires != null" >
+        AUTH_EXPIRES = #{record.authExpires,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createDate != null" >
+        CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.doneDate != null" >
+        DONE_DATE = #{record.doneDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.state != null" >
+        STATE = #{record.state,jdbcType=CHAR},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update USER_AUTH
+    set ID = #{record.id,jdbcType=DECIMAL},
+      USER_ID = #{record.userId,jdbcType=VARCHAR},
+      AUTH_NAME = #{record.authName,jdbcType=VARCHAR},
+      AUTH_ID = #{record.authId,jdbcType=VARCHAR},
+      AUTH_ACCESS_TOKEN = #{record.authAccessToken,jdbcType=VARCHAR},
+      AUTH_EXPIRES = #{record.authExpires,jdbcType=DECIMAL},
+      CREATE_DATE = #{record.createDate,jdbcType=TIMESTAMP},
+      DONE_DATE = #{record.doneDate,jdbcType=TIMESTAMP},
+      STATE = #{record.state,jdbcType=CHAR},
+      REMARK = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.ihansen.jsmta.domain.UserAuth" >
+    update USER_AUTH
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="authName != null" >
+        AUTH_NAME = #{authName,jdbcType=VARCHAR},
+      </if>
+      <if test="authId != null" >
+        AUTH_ID = #{authId,jdbcType=VARCHAR},
+      </if>
+      <if test="authAccessToken != null" >
+        AUTH_ACCESS_TOKEN = #{authAccessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="authExpires != null" >
+        AUTH_EXPIRES = #{authExpires,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="doneDate != null" >
+        DONE_DATE = #{doneDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null" >
+        STATE = #{state,jdbcType=CHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.ihansen.jsmta.domain.UserAuth" >
+    update USER_AUTH
+    set USER_ID = #{userId,jdbcType=VARCHAR},
+      AUTH_NAME = #{authName,jdbcType=VARCHAR},
+      AUTH_ID = #{authId,jdbcType=VARCHAR},
+      AUTH_ACCESS_TOKEN = #{authAccessToken,jdbcType=VARCHAR},
+      AUTH_EXPIRES = #{authExpires,jdbcType=DECIMAL},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      DONE_DATE = #{doneDate,jdbcType=TIMESTAMP},
+      STATE = #{state,jdbcType=CHAR},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <sql id="OracleDialectPrefix" >
+    <if test="pageHelper != null" >
+      select * from ( select row_.*, rownum rownum_ from ( 
+    </if>
+  </sql>
+  <sql id="OracleDialectSuffix" >
+    <if test="pageHelper != null" >
+      <![CDATA[ ) row_  where rownum <= #{pageHelper.end} ) where rownum_ > #{pageHelper.begin}  ]]>
+    </if>
+  </sql>
+  <sql id="TABLE_SEQUENCE" >
+    USER_AUTH_SEQUENCE.nextval
+  </sql>
+  <insert id="insertBatch" parameterType="org.ihansen.jsmta.domain.UserAuth" >
+    insert into USER_AUTH
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      ID,USER_ID,AUTH_NAME,AUTH_ID,AUTH_ACCESS_TOKEN,AUTH_EXPIRES,CREATE_DATE,DONE_DATE,STATE,REMARK,
+    </trim>
+    select USER_AUTH_SEQUENCE.nextval,A.* from(
+    <foreach collection="list" index="index" item="item" separator="UNION ALL" >
+      SELECT
+      <trim suffixOverrides="," >
+        #{item.userId,jdbcType=VARCHAR},#{item.authName,jdbcType=VARCHAR},#{item.authId,jdbcType=VARCHAR},#{item.authAccessToken,jdbcType=VARCHAR},#{item.authExpires,jdbcType=DECIMAL},#{item.createDate,jdbcType=TIMESTAMP},#{item.doneDate,jdbcType=TIMESTAMP},#{item.state,jdbcType=CHAR},#{item.remark,jdbcType=VARCHAR},
+      </trim>
+      from dual
+    </foreach>
+    ) A
+  </insert>
+</mapper>

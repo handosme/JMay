@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
 		<!-- oracle/mysql方言插件 -->
 		<plugin type="org.ihansen.mbtgen.extend.CustomPlugin">
 			<property name="pageHelperClass" value="org.ihansen.mbtgen.extend.PageHelper" />
-			<property name="dbType" value="ORACLE" />
+			<property name="dbType" value="MYSQL" />
 		</plugin>
 		
 		<!-- 自定义Example类文件名字 -->
@@ -28,9 +28,12 @@ PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
 		</commentGenerator>
 		
 		<!-- 数据库连接 -->
-		<jdbcConnection driverClass="${oracle.jdbc.driver}"
-			connectionURL="${db1.jdbc.url}" userId="${db1.jdbc.username}"  
-            password="${db1.jdbc.password}" />
+<!-- 		<jdbcConnection driverClass="${oracle.jdbc.driver}" -->
+<!-- 			connectionURL="${db1.jdbc.url}" userId="${db1.jdbc.username}"   -->
+<!--             password="${db1.jdbc.password}" /> -->
+        <jdbcConnection driverClass="${mysql.jdbc.driver}"
+			connectionURL="${db2.jdbc.url}" userId="${db2.jdbc.username}"  
+            password="${db2.jdbc.password}" />
 
 		<!-- Oracle自定义类型转换 -->
 		<javaTypeResolver type="org.ihansen.mbtgen.extend.CustJavaTypeResolver">
@@ -55,11 +58,11 @@ PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
 		</javaClientGenerator>
 
 		<!-- 要对那些数据表进行生成操作，必须要有一个 -->
-		<table tableName="bus_sec_key" domainObjectName="SecKey">
+		<table tableName="bus_log" domainObjectName="BusLog">
 			<!-- 自定义属性配置：设置此属性表示该字段自增 -->
 			<property name="incrementField" value="id"/>
 			<!-- 自定义属性配置：对应的数据源名称 -->
-			<property name="dataSourceName" value="DEFAULT"/>
+			<property name="dataSourceName" value="db2"/>
 			<property name="enableCountByExample" value="true"/>
 			<property name="enableUpdateByExample" value="true"/>
 			<property name="enableDeleteByExample" value="true"/>
