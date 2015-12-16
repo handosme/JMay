@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+			http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+			http://www.springframework.org/schema/mvc 
+			http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+			http://www.springframework.org/schema/context 
+			http://www.springframework.org/schema/context/spring-context-4.0.xsd ">
+
+	<!-- 自动扫描 -->
+	<context:component-scan base-package="com.allinpay.zj.tlacp.web.controller" />
+
+	<!-- 注解驱动 -->
+	<mvc:annotation-driven />
+
+	<!-- 资源管理 -->
+	<mvc:resources location="/static/" mapping="/static/**" />
+	<mvc:resources location="/upload/" mapping="/upload/**"/>
+	
+	<!-- 内部资源视图解析器 prefix + logicName + suffix /WEB-INF/jsps/ + index + .jsp -->
+	<bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 包含JSTL解析 -->
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+		<!-- 前缀 -->
+		<property name="prefix" value="/WEB-INF/pages/" />
+		<!-- 后缀 -->
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<!--配置拦截器, 多个拦截器,顺序执行 -->
+	<mvc:interceptors>
+		<!-- 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法 -->
+		<mvc:interceptor>
+			<!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller,请求不存在的服务或资源不会拦截 -->
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/upload/**"/>
+			<mvc:exclude-mapping path="/common/codeVerify"/>
+			<bean class="com.allinpay.zj.tlacp.web.interceptor.LoginInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.allinpay.zj.tlacp.web.interceptor.ResponseInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+</beans>
