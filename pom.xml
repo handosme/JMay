@@ -91,6 +91,11 @@
 			<version>5.0.8</version>
 		</dependency>
 		<dependency>
+			<groupId>com.hynnet</groupId>
+			<artifactId>sqljdbc4-chs</artifactId>
+			<version>4.0.2206.100</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aop</artifactId>
 			<version>4.2.0.RELEASE</version>

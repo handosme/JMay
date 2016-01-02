@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
 		<!-- oracle/mysql方言插件 -->
 		<plugin type="org.ihansen.mbtgen.extend.CustomPlugin">
 			<property name="pageHelperClass" value="org.ihansen.mbtgen.extend.PageHelper" />
-			<property name="dbType" value="MYSQL" />
+			<property name="dbType" value="SQLSERVER" />
 		</plugin>
 		
 		<!-- 自定义Example类文件名字 -->
@@ -50,6 +50,8 @@ PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
 		<!-- sql mapper 隐射配置文件(xml配置文件) -->
 		<sqlMapGenerator targetPackage="org.ihansen.jsmta.mapper" targetProject="src/main/resources">
 			<property name="enableSubPackages" value="true" />
+			<!-- 此属性表示若已存在xml是否和原文件合并 -->
+			<property name="isMergeable" value="false"/>
 		</sqlMapGenerator>
 
 		<!-- 在ibatis2 中是dao层，但在mybatis3中，其实就是mapper接口 -->
@@ -62,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
 			<!-- 自定义属性配置：设置此属性表示该字段自增 -->
 			<property name="incrementField" value="id"/>
 			<!-- 自定义属性配置：对应的数据源名称 -->
-			<property name="dataSourceName" value="db2"/>
+			<property name="dataSourceName" value="db3"/>
 			<property name="enableCountByExample" value="true"/>
 			<property name="enableUpdateByExample" value="true"/>
 			<property name="enableDeleteByExample" value="true"/>
