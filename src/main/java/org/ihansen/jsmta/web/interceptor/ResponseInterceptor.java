@@ -7,8 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-public class ResponseInterceptor extends HandlerInterceptorAdapter
-{
+public class ResponseInterceptor extends HandlerInterceptorAdapter {
 	private static transient Log log = LogFactory.getLog(ResponseInterceptor.class);
 
 	/**
@@ -17,9 +16,8 @@ public class ResponseInterceptor extends HandlerInterceptorAdapter
 	 * 从最后一个拦截器往回执行所有的postHandle() 接着再从最后一个拦截器往回执行所有的afterCompletion()
 	 */
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
-	{
-		response.setHeader("Access-Control-Allow-Origin", "*");//允许所有域名,解决Ajax跨域问题
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		response.setHeader("Access-Control-Allow-Origin", "*");// 允许所有域名,解决Ajax跨域问题
 		return true;
 	}
 
@@ -27,19 +25,16 @@ public class ResponseInterceptor extends HandlerInterceptorAdapter
 	 * 在业务处理器处理请求执行完成后,生成视图之前执行的动作 可在modelAndView中加入数据，比如当前时间
 	 */
 	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception
-	{
-		
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+
 	}
 
 	/**
 	 * 在DispatcherServlet完全处理完请求后被调用,可用于清理资源等
-	 * 
 	 * 当有拦截器抛出异常时,会从当前拦截器往回执行所有的拦截器的afterCompletion()
 	 */
 	@Override
-	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception
-	{
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 
 	}
 }
