@@ -14,7 +14,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource
 	@Override
 	protected Object determineCurrentLookupKey()
 	{
-		String lookUpKey = SqlContextHolder.getDatasourcekey().get();
+		String lookUpKey = SqlContextHolder.getDatasourcekey();
 		log.info("--------->>>>使用数据源："+lookUpKey);
 		return lookUpKey;
 	}

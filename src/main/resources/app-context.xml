@@ -27,41 +27,30 @@
 	<context:property-placeholder location="classpath:dbconfig.properties" />
 	
 	<!-- 数据源db1 -->
-	<bean id="db1" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-		<property name="driverClass" value="${oracle.jdbc.driver}" />
-		<property name="jdbcUrl" value="${db1.jdbc.url}" />
-		<property name="user" value="${db1.jdbc.username}" />
-		<property name="password" value="${db1.jdbc.password}" />
-		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
-        <property name="minPoolSize" value="${c3p0.minPoolSize}" />
-        <property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
-        <property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
-        <property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
-        <property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
-        <property name="preferredTestQuery" value="${c3p0.preferredTestQuery}" />
-        <property name="testConnectionOnCheckout" value="${c3p0.testConnectionOnCheckout}" />
-        <property name="testConnectionOnCheckin" value="${c3p0.testConnectionOnCheckin}" />
-        <property name="maxStatementsPerConnection" value="${c3p0.maxStatementsPerConnection}" />
-        <property name="numHelperThreads" value="${c3p0.numHelperThreads}" />
+	<bean id="db1" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+		<property name="uniqueResourceName" value="db1_unique" />
+		<property name="xaDataSourceClassName" value="${oracle.jdbc.xa.driver}" />
+		<property name="xaProperties">
+			<props>
+				<prop key="user">${db1.jdbc.username}</prop>
+				<prop key="password">${db1.jdbc.password}</prop>
+				<prop key="URL">${db1.jdbc.url}</prop>
+			</props>
+		</property>
+		<property name="poolSize" value="10" />
 	</bean>
-	
 	<!-- 数据源db2 -->
-	<bean id="db2" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-		<property name="driverClass" value="${mysql.jdbc.driver}" />
-		<property name="jdbcUrl" value="${db2.jdbc.url}" />
-		<property name="user" value="${db2.jdbc.username}" />
-		<property name="password" value="${db2.jdbc.password}" />
-		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
-        <property name="minPoolSize" value="${c3p0.minPoolSize}" />
-        <property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
-        <property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
-        <property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
-        <property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
-        <property name="preferredTestQuery" value="${c3p0.preferredTestQuery}" />
-        <property name="testConnectionOnCheckout" value="${c3p0.testConnectionOnCheckout}" />
-        <property name="testConnectionOnCheckin" value="${c3p0.testConnectionOnCheckin}" />
-        <property name="maxStatementsPerConnection" value="${c3p0.maxStatementsPerConnection}" />
-        <property name="numHelperThreads" value="${c3p0.numHelperThreads}" />
+	<bean id="db2" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+		<property name="uniqueResourceName" value="db2_unique" />
+		<property name="xaDataSourceClassName" value="${mysql.jdbc.xa.driver}" />
+		<property name="xaProperties">
+			<props>
+				<prop key="user">${db2.jdbc.username}</prop>
+				<prop key="password">${db2.jdbc.password}</prop>
+				<prop key="URL">${db2.jdbc.url}</prop>
+			</props>
+		</property>
+		<property name="poolSize" value="10" />
 	</bean>
 	
 	<!-- 序列生成器 -->
@@ -70,16 +59,6 @@
 		<property name="dataSource" ref="db1"/>
 	</bean>
 	
-	<!-- 动态数据源 -->
-	<bean id="dynDB" class="org.ihansen.jsmta.dao.DynamicDataSource">
-		<property name="defaultTargetDataSource" ref="db1" />
-		<property name="targetDataSources">
-			<map key-type="java.lang.String">
-				<entry key="db1" value-ref="db1" />
-				<entry key="db2" value-ref="db2" />
-			</map>
-		</property>
-	</bean>
 	
 	<!-- AOP实现数据源的动态切换 -->
 	<bean id="dataSourceHolder" class="org.ihansen.jsmta.dao.SqlContextHolder"></bean>
@@ -89,27 +68,63 @@
 		</aop:aspect>
 	</aop:config>
 	
-	<!-- 此版本不支持事务中切换数据源,也不建议事务控制 -->
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dynDB" />
+	<!-- 配置JTA的事务管理器 -->     
+    <bean id="jtaTransactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+    	<property name="transactionManager">
+    		<bean class="com.atomikos.icatch.jta.UserTransactionManager" init-method="init" destroy-method="close">  
+	            <property name="forceShutdown" value="true"/>  
+	        </bean>  
+	    </property>  
+	    <property name="userTransaction">  
+	        <bean class="com.atomikos.icatch.jta.UserTransactionImp"/>  
+	    </property>
+	    <property name="allowCustomIsolationLevels" value="true"/>  
 	</bean>
+	
 	<!-- 可通过注解控制事务 -->
-	<tx:annotation-driven transaction-manager="transactionManager" />
-	
-	<!-- 创建SqlSessionFactory，同时指定数据源 -->
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dynDB" />
-		<property name="mapperLocations" value="classpath*:org/ihansen/jsmta/mapper/*.xml" />
-	</bean>
-	
-	<!-- Mapper接口所在包名，Spring会自动查找其下的Mapper -->
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="org.ihansen.jsmta.domain.operate" />
-		<!--使用 sqlSessionFactoryBeanName解决配置文件占位符不能解析的问题：
-			MapperScannerConigurer实际是在解析加载bean定义阶段的，
-			这个时候要是设置 sqlSessionFactory的话，会导致提前初始化一些类，
-			但此时PropertyPlaceholderConfigurer还没来得及替 换定义中的变量，导致把表达式当作字符串复制了 -->
-		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
-	</bean>
-	
+	<tx:annotation-driven transaction-manager="jtaTransactionManager" />  
+    <!-- 配置事务通知 -->
+    <tx:advice id="txAdvice" transaction-manager="jtaTransactionManager">  
+        <tx:attributes>  
+             <tx:method name="*" propagation="REQUIRED" isolation="DEFAULT" rollback-for="Exception" />  
+        </tx:attributes>  
+    </tx:advice>
+    <aop:config>
+        <aop:advisor pointcut="execution(* org.ihansen.jsmta.service.impl.*.*(..))" advice-ref="txAdvice" />
+    </aop:config>
+    
+    <!-- 创建SqlSessionFactory，每一个数据源对应一个SqlSessionFactory -->
+	<bean id="db1SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="db1"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:org/ihansen/jsmta/mapper/UserAuthMapper.xml</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="db2SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="db2"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:org/ihansen/jsmta/mapper/BusLogMapper.xml</value>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- 配置自定义的SqlSessionTemplate模板，注入相关配置 -->
+    <bean id="sqlSessionTemplate" class="org.ihansen.jsmta.dao.CustomSqlSessionTemplate" scope="prototype">
+        <constructor-arg ref="db1SqlSessionFactory" />
+        <property name="targetSqlSessionFactorys">
+            <map>     
+                <entry key="db1" value-ref="db1SqlSessionFactory"/>
+                <entry key="db2" value-ref="db2SqlSessionFactory"/>
+            </map>
+        </property>
+    </bean>
+    
+    <!-- 通过扫描的模式，扫描目录在com.allinpay.zj.proper.domain.operate任意目录下的mapper目录下，所有的mapper都需要继承SqlMapper接口的接口 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="org.ihansen.jsmta.domain.operate"/>
+        <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate"/>
+    </bean>
 </beans>

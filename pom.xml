@@ -153,7 +153,7 @@
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-spring</artifactId>
-			<version>1.1.0</version>
+			<version>1.2.3</version>
 		</dependency>
 <!-- 		非公开jar包,已放入lib目录下 -->
 <!-- 		<dependency> -->
@@ -166,6 +166,44 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
+		<!-- atomikos依赖包 start -->
+		<!-- 版本难以适配兼容,可用版本jar已放入lib目录下 -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.atomikos</groupId> -->
+<!-- 			<artifactId>transactions-jta</artifactId> -->
+<!-- 			<version>3.7.0</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.atomikos</groupId> -->
+<!-- 			<artifactId>atomikos-util</artifactId> -->
+<!-- 			<version>3.7.0</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.atomikos</groupId> -->
+<!-- 			<artifactId>transactions-jms</artifactId> -->
+<!-- 			<version>3.7.0</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.atomikos</groupId> -->
+<!-- 			<artifactId>transactions-osgi</artifactId> -->
+<!-- 			<version>3.7.0</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.atomikos</groupId> -->
+<!-- 			<artifactId>transactions-jta</artifactId> -->
+<!-- 			<version>3.7.0</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.atomikos</groupId> -->
+<!-- 			<artifactId>transactions-api</artifactId> -->
+<!-- 			<version>3.7.0</version> -->
+<!-- 		</dependency> -->
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+			<version>1.1</version>
+		</dependency>
+        <!-- atomikos依赖包end  -->
 	</dependencies>
 	<build>
 		<finalName>jsmta</finalName>

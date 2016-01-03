@@ -28,6 +28,7 @@ public class UserAuthSVImpl implements IUserAuthSV{
 		if(userAuth!=null){
 			count = userAuthDAO.add(userAuth);
 			busLogSV.log("100001", "0000");//记录本次操作
+			System.out.println("ok");
 		}
 		return count;
 	}

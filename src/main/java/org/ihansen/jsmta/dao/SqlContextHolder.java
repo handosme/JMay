@@ -23,8 +23,8 @@ public class SqlContextHolder {
 		dataSourceKey.set(dataSourceName);
 	}
 	
-	public static ThreadLocal<String> getDatasourcekey() {
-		return dataSourceKey;
+	public static String getDatasourcekey() {
+		return dataSourceKey.get();
 	}
 
 	public static void clearDataSourceKey() {

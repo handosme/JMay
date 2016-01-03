@@ -1,6 +1,8 @@
 package test.spring_test_junit;
 
 
+import java.util.Date;
+
 import org.ihansen.jsmta.domain.UserAuth;
 import org.ihansen.jsmta.service.interfaces.IUserAuthSV;
 import org.junit.Test;
@@ -16,6 +18,7 @@ public class UserAuthTest extends BaseJunit4Test{
 		UserAuth userAuth = new UserAuth();
 		userAuth.setUserId("user1");
 		userAuth.setAuthId("user1");
+		userAuth.setDoneDate(new Date());
 		userAuthSV.addUserAuth(userAuth);
 	}
 	
