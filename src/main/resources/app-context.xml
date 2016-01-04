@@ -20,7 +20,7 @@
 	<!-- 自动扫描 -->
 	<context:component-scan base-package="org.ihansen.jsmta.dao.impl,org.ihansen.jsmta.service.impl,org.ihansen.jsmta.web,org.ihansen.jsmta.task" />
 
-	<!-- 声明可以使用任务调度注解 -->
+	<!-- 启动task注解解析器 -->
 	<task:annotation-driven />
 
 	<!-- 数据源分散配置 -->
@@ -81,7 +81,7 @@
 	    <property name="allowCustomIsolationLevels" value="true"/>  
 	</bean>
 	
-	<!-- 可通过注解控制事务 -->
+	<!-- 启动事务注解解析器 -->
 	<tx:annotation-driven transaction-manager="jtaTransactionManager" />  
     <!-- 配置事务通知 -->
     <tx:advice id="txAdvice" transaction-manager="jtaTransactionManager">  
@@ -122,7 +122,7 @@
         </property>
     </bean>
     
-    <!-- 通过扫描的模式，扫描目录在com.allinpay.zj.proper.domain.operate任意目录下的mapper目录下，所有的mapper都需要继承SqlMapper接口的接口 -->
+    <!-- 通过扫描的模式，扫描目录在org.ihansen.jsmta.domain.operate任意目录下继承SqlMapper接口的接口 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="org.ihansen.jsmta.domain.operate"/>
         <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate"/>
