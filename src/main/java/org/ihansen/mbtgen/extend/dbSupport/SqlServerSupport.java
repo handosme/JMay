@@ -40,7 +40,7 @@ public class SqlServerSupport implements DBSupport {
 		paginationSuffixElement.addAttribute(new Attribute("id", "SqlServerDialectSuffix"));
 		XmlElement suffixIf = new XmlElement("if");
 		suffixIf.addAttribute(new Attribute("test", "pageHelper != null"));
-		suffixIf.addElement(new TextElement("<![CDATA[) _pagination_tab WHERE _pagination_rownumber >=#{pageHelper.begin} and _pagination_rownumber < #{pageHelper.end}]]>"));
+		suffixIf.addElement(new TextElement("<![CDATA[) _pagination_tab WHERE _pagination_rownumber >#{pageHelper.begin} and _pagination_rownumber <= #{pageHelper.end}]]>"));
 		paginationSuffixElement.addElement(suffixIf);
 		parentElement.addElement(paginationSuffixElement);
 
