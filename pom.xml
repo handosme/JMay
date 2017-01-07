@@ -81,9 +81,9 @@
 			<version>3.1.1</version>
 		</dependency>
 		<dependency>
-			<groupId>ojdbc</groupId>
-			<artifactId>ojdbc</artifactId>
-			<version>6</version>
+			<groupId>com.hynnet</groupId>
+			<artifactId>oracle-driver-ojdbc</artifactId>
+			<version>12.1.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
