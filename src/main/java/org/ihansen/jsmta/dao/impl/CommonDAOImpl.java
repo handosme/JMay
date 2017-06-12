@@ -1,7 +1,9 @@
 package org.ihansen.jsmta.dao.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -13,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 public abstract class CommonDAOImpl<T, O, C> implements ICommonDAO<T, O, C> {
-    private static transient Log log = LogFactory.getLog(CommonDAOImpl.class);
 
     public final static String COUNT_BY_EXAMPLE = "countByExample";
     public final static String DELETE_BY_EXAMPLE = "deleteByExample";
@@ -31,128 +32,128 @@ public abstract class CommonDAOImpl<T, O, C> implements ICommonDAO<T, O, C> {
     private O operate;
 
     @Override
-    public int countByCondition(C conditon) throws Exception {
-        int returnValue = 0;
-        if (conditon != null) {
-            Method method = operate.getClass().getMethod(COUNT_BY_EXAMPLE, conditon.getClass());
-            returnValue = (int) method.invoke(operate, conditon);
-        } else {
-            throw new Exception("查询条件为null");
+    public int countByCondition(C conditon) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if (conditon == null) {
+            return 0;
         }
+        Method method = operate.getClass().getMethod(COUNT_BY_EXAMPLE, conditon.getClass());
+        int returnValue = (Integer) method.invoke(operate, conditon);
         return returnValue;
     }
 
     @Override
-    public int deleteByCondition(C conditon) throws Exception {
-        int returnValue = 0;
-        if (conditon != null) {
-            Method method = operate.getClass().getMethod(DELETE_BY_EXAMPLE, conditon.getClass());
-            returnValue = (int) method.invoke(operate, conditon);
-        } else {
-            throw new Exception("删除条件为null");
+    public int deleteByCondition(C conditon) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if (conditon == null) {
+            return 0;
         }
+        Method method = operate.getClass().getMethod(DELETE_BY_EXAMPLE, conditon.getClass());
+        int returnValue = (Integer) method.invoke(operate, conditon);
         return returnValue;
     }
 
     @Override
-    public int deleteById(Long id) throws Exception {
-        int returnValue = 0;
-        if (id != null) {
-            Method method = operate.getClass().getMethod(DELETE_BY_PRIMARYKEY, id.getClass());
-            returnValue = (int) method.invoke(operate, id);
-        }
-        return returnValue;
-
-    }
-
-    @Override
-    public int add(T record) throws Exception {
-        int returnValue = 0;
-        if (record != null) {
-            Method method = operate.getClass().getMethod(INSERT_SELECTIVE, record.getClass());
-            returnValue = (int) method.invoke(operate, record);
-        }
-        return returnValue;
-    }
-
-    @Override
-    public List<T> queryByCondition(C conditon) throws Exception {
-        List<T> results = new ArrayList<T>();
-        if (conditon != null) {
-            Method method = operate.getClass().getMethod(SELECT_BY_EXAMPLE, conditon.getClass());
-            results = (List<T>) method.invoke(operate, conditon);
-        } else {
-            throw new Exception("查询条件为null");
-        }
-        return results;
-    }
-
-    @Override
-    public List<T> queryByCondition(C conditon, int start, int length) throws Exception {
-        List<T> results = new ArrayList<T>();
-        if (conditon != null) {
-            try {
-                if (start >= 0 && length >= 0) {
-                    PageHelper pageHelper = new PageHelper(start, length);
-                    conditon.getClass().getMethod(SET_PAGEHELPER, PageHelper.class).invoke(conditon, pageHelper);
-                }
-                Method operateMethod = operate.getClass().getMethod(SELECT_BY_EXAMPLE, conditon.getClass());
-                results = (List<T>) operateMethod.invoke(operate, conditon);
-            } catch (Exception e) {
-                log.error(e, e);
-                throw e;
+    public int deleteById(long id) throws InvocationTargetException, IllegalAccessException {
+        Method method = null;
+        Method[] methods = operate.getClass().getMethods();
+        for (Method method1 : methods) {
+            if (DELETE_BY_PRIMARYKEY.equals(method1.getName())) {
+                method = method1;
+                break;
             }
-        } else {
-            throw new RuntimeException("查询条件为null");
         }
+        if (method == null) {
+            return 0;
+        }
+        int returnValue = (Integer) method.invoke(operate, id);
+        return returnValue;
+    }
+
+    @Override
+    public int add(T record) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if (record == null) {
+            return 0;
+        }
+        Method method = operate.getClass().getMethod(INSERT_SELECTIVE, record.getClass());
+        int returnValue = (Integer) method.invoke(operate, record);
+        return returnValue;
+    }
+
+    @Override
+    public List<T> queryByCondition(C conditon) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if (conditon == null) {
+            return Collections.EMPTY_LIST;
+        }
+        Method method = operate.getClass().getMethod(SELECT_BY_EXAMPLE, conditon.getClass());
+        List<T> results = (List<T>) method.invoke(operate, conditon);
         return results;
     }
 
     @Override
-    public T queryById(Long id) throws Exception {
-        T record = null;
-        if (id != null) {
-            Method method = operate.getClass().getMethod(SELECT_BY_PRIMARYKEY, id.getClass());
-            record = (T) method.invoke(operate, id);
+    public List<T> queryByCondition(C conditon, int start, int length) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if (conditon == null) {
+            return Collections.EMPTY_LIST;
         }
+        PageHelper pageHelper = new PageHelper(start, length);
+        conditon.getClass().getMethod(SET_PAGEHELPER, PageHelper.class).invoke(conditon, pageHelper);
+        Method operateMethod = operate.getClass().getMethod(SELECT_BY_EXAMPLE, conditon.getClass());
+        List<T> results = (List<T>) operateMethod.invoke(operate, conditon);
+        return results;
+    }
+
+    @Override
+    public T queryById(long id) throws InvocationTargetException, IllegalAccessException {
+        Method method = null;
+        Method[] methods = operate.getClass().getMethods();
+        for (Method method1 : methods) {
+            if (SELECT_BY_PRIMARYKEY.equals(method1.getName())) {
+                method = method1;
+                break;
+            }
+        }
+        T record = null;
+        if (method == null) {
+            return record;
+        }
+        record = (T) method.invoke(operate, id);
         return record;
     }
 
     @Override
-    public int updateByCondition(T record, C conditon) throws Exception {
-        int returnValue = 0;
-        if (record != null && conditon != null) {
-            Method method = operate.getClass().getMethod(UPDATE_BY_EXAMPLE_SELECTIVE, record.getClass(), conditon.getClass());
-            returnValue = (int) method.invoke(operate, record, conditon);
+    public int updateByCondition(T record, C conditon) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if (record == null || conditon == null) {
+            return 0;
         }
+        Method method = operate.getClass().getMethod(UPDATE_BY_EXAMPLE_SELECTIVE, record.getClass(), conditon.getClass());
+        int returnValue = (Integer) method.invoke(operate, record, conditon);
         return returnValue;
-
     }
 
     @Override
     public int updateById(T record) throws Exception {
-        int returnValue = 0;
-        if (record != null) {
-            Method method = operate.getClass().getMethod(UPDATE_BY_PRIMARYKEY_SELECTIVE, record.getClass());
-            returnValue = (int) method.invoke(operate, record);
+        if (record == null) {
+            return 0;
         }
-        return returnValue;
-
-    }
-
-    @Override
-    public int add(List<T> records) throws Exception {
-        int returnValue = 0;
-        if (records != null && records.size() > 0) {
-            Method method = operate.getClass().getMethod(INSERT_BATCH, List.class);
-            returnValue = (int) method.invoke(operate, records);
-        }
+        Method method = operate.getClass().getMethod(UPDATE_BY_PRIMARYKEY_SELECTIVE, record.getClass());
+        int returnValue = (Integer) method.invoke(operate, record);
         return returnValue;
     }
 
     @Override
-    public T qrySingleByCondition(C conditon) throws Exception {
+    public int add(List<T> records) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if (records == null || records.size() < 1) {
+            return 0;
+        }
+        Method method = operate.getClass().getMethod(INSERT_BATCH, List.class);
+        int returnValue = (Integer) method.invoke(operate, records);
+        return returnValue;
+    }
+
+    @Override
+    public T qrySingleByCondition(C conditon) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         T t = null;
+        if (conditon == null) {
+            return t;
+        }
         List<T> ts = queryByCondition(conditon);
         if (ts != null && ts.size() > 0) {
             t = ts.get(0);
@@ -161,7 +162,7 @@ public abstract class CommonDAOImpl<T, O, C> implements ICommonDAO<T, O, C> {
     }
 
     @Override
-    public String getDataSourceName() throws Exception {
+    public String getDataSourceName() throws NoSuchFieldException, IllegalAccessException {
         return (String) operate.getClass().getField(Constant.DATA_SOURCE_NAME).get(operate);
     }
 
