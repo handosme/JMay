@@ -1,5 +1,5 @@
 # JMay是什么
-JMay是一款基于Spring、SpringMVC、Mybatis、Atomikos集成框架，用于快速搭建跨数据库、分布式事务(XA规范)支持的java web项目.
+JMay是一款基于Spring、SpringMVC、Mybatis、Atomikos集成框架，用于快速搭建跨数据库、分布式事务(XA规范)支持的Java web项目.
 
 # JMay有哪些功能
 <a href="https://github.com/handosme/JMay/releases/tag/v1.0"><h4>v1.0功能列表：</h4></a>
@@ -10,4 +10,4 @@ JMay是一款基于Spring、SpringMVC、Mybatis、Atomikos集成框架，用于�
 
 
 <a href="https://github.com/handosme/JMay/releases/tag/v2.0"><h4>v2.0功能列表：</h4></a>
-+1.引入Atomikos，分布式事务支持<br>
+1. 基于Atomikos，分布式事务支持(需要数据库支持XA规范)<br>
